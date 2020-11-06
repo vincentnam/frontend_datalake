@@ -26,5 +26,5 @@ services:
     network_mode: host
     ports:
     - 5000:5000
-    volumes:
-      - ./express_server/:/app/
+#    volumes:
+#      - ./express_server/:/app/
