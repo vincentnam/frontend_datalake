@@ -10,6 +10,7 @@ import Dropzone from 'react-dropzone-uploader'
 import {Form} from "react-bootstrap";
 import ProgressBar from "./progressBar";
 import log from "d3-scale/src/log";
+import progressBar from "./progressBar";
 
 
 
@@ -18,7 +19,7 @@ export default function D3Test(props){
 
     const d3Container = useRef(null);
     const fileInputRef = useRef(null);
-    const uploadProgress = useRef({})
+    // const uploadProgress = useRef({})
     // list of file in the dropzone
     const  [file_array, setFileArray] = useState([])
     // used in onDragLeave onDragOver onMouseOut onMouseOver
@@ -28,19 +29,19 @@ export default function D3Test(props){
     //
     const [ uploading, setUploading] = useState(false )
     // used in renderProgress
-    // const [ uploadProgress, setUploadProgress] = useState([])
+    const [ uploadProgress, setUploadProgress] = useState({})
     // const uploadProgress = {}
     // const setUploadProgress = (filename ,file_progress) =>{
     //     uploadProgress[filename] = file_progress
     // }
-    const setUploadProgress = (progress) =>{
-        uploadProgress.current = progress
-    }
-    const add_progress = (filename , progress) => {
-        const upload_prog = uploadProgress.current
-        upload_prog[filename] = progress
-        setUploadProgress(upload_prog)
-    }
+    // const setUploadProgress = (progress) =>{
+    //     uploadProgress.current = progress
+    // }
+    // const add_progress = (filename , progress) => {
+    //     const upload_prog = uploadProgress.current
+    //     upload_prog[filename] = progress
+    //     setUploadProgress(upload_prog)
+    // }
 
     // used in renderProgress
     const [ successfullUploaded , setSuccessfullUploaded] = useState(false)
@@ -51,11 +52,11 @@ export default function D3Test(props){
             array.push(list.item(i));
         }
         setFileArray(array)
-        console.log(file_array)
+        // console.log(file_array)
     }
     const onFilesAdded = (evt) => {
         if (disabled) return;
-        console.log(evt.target.files)
+        // console.log(evt.target.files)
         const files = evt.target.files;
         // const upload_progress = uploadProgress
         // Compatible ES5
@@ -63,10 +64,15 @@ export default function D3Test(props){
         // Compatible ES6
         // Array.from(files).forEach(file => { upload_progress[file.name] = {state: "ready", percentage: 0} });
 
-        // setUploadProgress(upload_progress)
-
         fileListToArray(files);
 
+        // setUploadProgress(upload_progress)
+        const prog_map = uploadProgress
+        for (var i = 0; i< files.length; i++){
+            // prog_map.push(files.item(i).name:{"ok":"oui"})
+            prog_map[files.item(i).name] = { state:"ready", percentage:0}
+        }
+        setUploadProgress(prog_map)
     }
     const openFileDialog = () => {
         if (props.disabled) return ;
@@ -101,34 +107,53 @@ export default function D3Test(props){
         setHighligth(true)
     }
 
-    const renderProgress = (file) =>{
-        console.log(uploadProgress)
-        let upload_Progress= null
-        if (file.name in uploadProgress.current){
-            upload_Progress = uploadProgress.current[file.name]
+    // const renderProgress = (file) =>{
+    //     // console.log(uploadProgress)
+    //
+    //     let upload_Progress= null
+    //     if (file.name in uploadProgress.current){
+    //         upload_Progress = uploadProgress.current[file.name]
+    //     }
+    //     else {
+    //         upload_Progress = {state:"ready", percentage:0}
+    //         add_progress(file.name, upload_Progress)
+    //     }
+    //     // const uploadProgress_file = { state:"ready", percentage:0}
+    //     if (uploading || successfullUploaded ){
+    //         return <div className="ProgressWrapper">
+    //             <ProgressBar  progress={upload_Progress ? upload_Progress.percentage : 0}/>
+    //             <img
+    //                 className="CheckIcon"
+    //                 alt="done"
+    //                 src="images/checked.svg"
+    //                 style={{
+    //                     opacity:
+    //                         uploadProgress && uploadProgress.state === "done" ? 0.5 : 0
+    //                 }}
+    //             />
+    //         </div>
+    //     }
+    //
+    // }
+    const renderProgress = (file) => {
+        const uploadProgress = uploadProgress[file.name];
+        if (uploading || successfullUploaded) {
+            return (
+                <div className="ProgressWrapper">
+                    <ProgressBar progress={uploadProgress ? uploadProgress.percentage : 0} />
+                    <img
+                        className="CheckIcon"
+                        alt="done"
+                        src="images/checked.svg"
+                        style={{
+                            opacity:
+                                uploadProgress && uploadProgress.state === "done" ? 0.5 : 0
+                        }}
+                    />
+                </div>
+            );
         }
-        else {
-            upload_Progress = {state:"ready", percentage:0}
-            add_progress(file.name, upload_Progress)
-        }
-        // const uploadProgress_file = { state:"ready", percentage:0}
-        if (uploading || successfullUploaded ){
-            return <div className="ProgressWrapper">
-                <ProgressBar  progress={upload_Progress ? upload_Progress.percentage : 0}/>
-                <img
-                    className="CheckIcon"
-                    alt="done"
-                    src="images/checked.svg"
-                    style={{
-                        opacity:
-                            uploadProgress && uploadProgress.state === "done" ? 0.5 : 0
-                    }}
-                />
-            </div>
-        }
-
     }
-
     // UPDATE WHEN SUCCESSFULLUPLOADED DICT IS FILLED
     const renderActions = () =>{
         if (successfullUploaded) {
@@ -179,7 +204,32 @@ export default function D3Test(props){
                 data: file,
                 cache:false,
                 processData:false,
-                contentType:"application/octet-stream"
+                contentType:"application/octet-stream",
+                xhr: function()
+                {
+                    var xhr = new XMLHttpRequest();
+                    //Upload progress
+                    xhr.upload.addEventListener("progress", function(evt){
+                        if (evt.lengthComputable) {
+                            var percentComplete = evt.loaded / evt.total;
+                            //Do something with upload progress
+                            console.log(percentComplete);
+                            uploadProgress[file.name].progress = percentComplete
+                            console.log(uploadProgress[file.name])
+                        }
+                    }, false);
+                    //Download progress
+                    xhr.addEventListener("progress", function(evt){
+                        if (evt.lengthComputable) {
+                            var percentComplete = evt.loaded / evt.total;
+                            //Do something with download progress
+                            console.log(percentComplete);
+                        }
+                    }, false);
+                    return xhr;
+                },
+
+
             }).done(function(data){
                 console.log(data)
             })
