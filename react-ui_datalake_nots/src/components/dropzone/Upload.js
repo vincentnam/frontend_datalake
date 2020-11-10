@@ -47,7 +47,7 @@ class Upload extends Component {
 
 
             $.ajax({
-                url: "http://127.0.0.1:5000/upload_file",
+                url: "http://141.115.103.34:5000/upload_file",
                 type: "POST",
                 data: file,
                 cache: false,
@@ -89,11 +89,6 @@ class Upload extends Component {
 
 
             }).promise()
-            // const formData = new FormData();
-            // var blob = new Blob(file, {type:'application/octet-stream'})
-            // formData.append("file", blob, file.name);
-            // req.open("POST", "http://localhost:5000/upload_file");
-            // req.send(formData);
         });
     }
 
@@ -103,15 +98,6 @@ class Upload extends Component {
             return (
                 <div className="ProgressWrapper">
                     <Progress progress={uploadProgress ? uploadProgress.percentage : 0} />
-                    {/*<img*/}
-                    {/*    className="CheckIcon"*/}
-                    {/*    alt="done"*/}
-                    {/*    src= {require("./images/checked.svg")}*/}
-                    {/*    style={{*/}
-                    {/*        opacity:*/}
-                    {/*            uploadProgress && uploadProgress.state === "done" ? 0.5 : 0.5*/}
-                    {/*    }}*/}
-                    {/*/>*/}
                 </div>
             );
         }
