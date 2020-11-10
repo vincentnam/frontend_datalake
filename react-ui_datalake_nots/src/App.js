@@ -19,8 +19,9 @@ import TrafficCount from "./components/TrafficCount";
 import D3component from "./components/d3component_graph";
 import D3Graph from "./components/d3component_graph";
 import D3Histo from "./components/d3component_histogram";
-import D3Test from "./components/d3component_testfield";
+import D3Test from "./components/dropzone/Upload";
 import D3TimeSerie from "./components/d3compoenent_timeserie";
+import Upload from "./components/dropzone/Upload";
 
 
 function Test(){
@@ -119,10 +120,10 @@ function App() {
                   <Col sm={12}>
                   <D3TimeSerie  data={"tt"}></D3TimeSerie>
                     {/*<D3Test  data={"tt"}></D3Test>*/}
-                    {/*<div className="Card">*/}
-                      <D3Test onFilesAdded={console.log} />
-                    {/*</div>*/}
-
+                    <div className="Card">
+                      <Upload/>
+                    </div>
+                    {/*<Upload/>*/}
                   </Col>
                 </Col>
               </Row>
