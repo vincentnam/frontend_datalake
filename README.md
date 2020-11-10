@@ -8,3 +8,11 @@
     ./strat_frontend.sh
     
     
+## IP Address config :
+
+Communication are done between : 
+
+- Upload component (src/component/dropzone) and 141.115.103.34:5000/upload_file :
+    - POST request
+    - application/octet-stream:q
+    
