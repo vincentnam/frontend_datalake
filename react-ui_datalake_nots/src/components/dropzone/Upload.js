@@ -45,15 +45,21 @@ class Upload extends Component {
         return new Promise((resolve, reject) => {
             const req = new XMLHttpRequest();
 
-
+            const form = new FormData();
+            form.append("file",file,file.name)
             $.ajax({
-                url: "http://141.115.103.34:5000/upload_file",
+                url: "http://127.0.0.1:5000/upload_file",
                 type: "POST",
                 data: file,
                 cache: false,
                 processData: false,
                 context: this,
+                // filename:file.name,
+                // contentType:"multipart/form-data",
                 contentType: "application/octet-stream",
+                headers: {
+                    "filename":file.name
+                },
                 xhr: function () {
                     var req = new XMLHttpRequest();
                     console.log(this)
