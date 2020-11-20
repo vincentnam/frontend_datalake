@@ -39,19 +39,20 @@ module.exports = function upload(req, res) {
                 stream.push(buffer)
 
                 stream.push(null)
-                let etag = {}
+
                 await container.create(i.toString() +"_"+filename, stream).then( etag=> {
-                    etag = {...etag}
+
+                        manifestList.push(
+                            {
+                                path:container_name+"/"+filename+i.toString(),
+                                ...etag,
+                                size_bytes: buffer.length
+                            }
+                        )
                 }
                 )
 
-                manifestList.push(
-                    {
-                        path:container_name+"/"+filename+i.toString(),
-                        etag,
-                        size_bytes: buffer.length
-                    }
-                )
+
 
             }
             console.log("Parts sent")
