@@ -36,9 +36,9 @@ module.exports = function upload(req, res) {
                 const buffer = Buffer.concat(segments[i])
                 const stream = new stream_lib.Readable()
                 stream.__read = () => {}
-                stream.push(null)
-
                 stream.push(buffer)
+
+                stream.push(null)
 
                 let { etag } = await container.create(i.toString() +"_"+filename, stream)
                 manifestList.push(
