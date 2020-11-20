@@ -33,8 +33,8 @@ module.exports = function upload(req, res) {
         const stream = new stream_lib.Readable()
         stream.__read = () => {}
         segments.forEach(segment => {
-            Buffer.concat(segment)
-            stream.push(segment)
+            const buffer = Buffer.concat(segment)
+            stream.push(buffer)
         }
         )
 
