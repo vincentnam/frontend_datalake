@@ -5,7 +5,7 @@
     
 ## Start frontend as it is : 
     
-    ./strat_frontend.sh
+    ./start_frontend.sh
     
     
 ## IP Address config :
