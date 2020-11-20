@@ -8,21 +8,36 @@ const stream_lib = require("stream")
 const mongo = require("mongodb")
 module.exports = function upload(req, res) {
     let body = []
+    let segments = []
     let counter = 0
+    const segments_size = 1000000000 // 1Go
     req.on('data',(chunk)=>{
         body.push(chunk);
         console.log(chunk.length)
-        counter += 1
+        if( counter >= segments_size){
+            segments.push(body)
+            body = []
+            counter = 0
+        }
+        counter += chunk.length
     }).on('end',()=>{
+        // Push the last chunk to segments array
+        segments.push(body)
+        delete body
         console.log(body)
         console.log(req.headers)
         const container_name = "my-test2"
         let container = client.container(container_name);
-        const buffer = Buffer.concat(body)
+        // const buffer = Buffer.concat(body)
         const filename = "test2"
         const stream = new stream_lib.Readable()
         stream.__read = () => {}
-        stream.push(buffer)
+        segments.forEach(segment => {
+            Buffer.concat(segment)
+            stream.push(segment)
+        }
+        )
+
         stream.push(null)
         console.log(container)
         console.log(req.headers["filename"])
