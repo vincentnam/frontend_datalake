@@ -48,7 +48,7 @@ class Upload extends Component {
             const form = new FormData();
             form.append("file",file,file.name)
             $.ajax({
-                url: "http://127.0.0.1:5000/upload_file",
+                url: "http://141.115.103.34:5000/upload_file",
                 type: "POST",
                 data: file,
                 cache: false,
