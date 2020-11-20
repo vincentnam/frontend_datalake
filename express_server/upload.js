@@ -23,7 +23,8 @@ module.exports = function upload(req, res) {
     }).on('end',()=>{
         // Push the last chunk to segments array
         segments.push(body)
-        // console.log(segments.length)
+        console.log("SEGMENT SIZE")
+        console.log(segments.length)
         // delete body
         console.log(segments)
 
