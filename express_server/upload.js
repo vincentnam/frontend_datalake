@@ -40,8 +40,7 @@ module.exports = function upload(req, res) {
 
                 stream.push(null)
 
-                let etag  = await container.create(i.toString() +"_"+filename, stream)
-                console.log(etag)
+                let { etag } = container.create(i.toString() +"_"+filename, stream)
 
                 manifestList.push(
                     {
