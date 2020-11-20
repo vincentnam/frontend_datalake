@@ -40,18 +40,17 @@ module.exports = function upload(req, res) {
 
                 stream.push(null)
 
-                await container.create(i.toString() +"_"+filename, stream).then( etag=> {
-
-                        manifestList.push(
-                            {
-                                path:container_name+"/"+filename+i.toString(),
-                                ...etag,
-                                size_bytes: buffer.length
-                            }
-                        )
+                const rep = await container.create(i.toString() +"_"+filename, stream).then( rep=> {
+                        console.log(rep)
                 }
                 )
-
+                manifestList.push(
+                    {
+                        path:container_name+"/"+filename+i.toString(),
+                        ...rep.headers.etag,
+                        size_bytes: buffer.length
+                    }
+                )
 
 
             }
