@@ -31,22 +31,25 @@ module.exports = function upload(req, res) {
             let manifestList = []
             // Push the last chunk to segments array
             segments.push(body)
-            segments.forEach( async function (segment,index){
-                const buffer = Buffer.concat(segment)
+            for (let i = 0; i < segments.length; i++){
+                const buffer = Buffer.concat(segments[i])
                 const stream = new stream_lib.Readable()
                 stream.__read = () => {}
                 stream.push(null)
 
                 stream.push(buffer)
 
-                let { etag } = await container.create(filename+index.toString(), stream)
-                manifestList.push({
-                    path:container_name+"/"+filename+index.toString(),
+                let { etag } = await container.create(i.toString() +"_"+filename, stream)
+                manifestList.push(
+                    {
+                    path:container_name+"/"+filename+i.toString(),
                     etag,
                     size_bytes: buffer.length
-                })
-                }
-            )
+                    }
+                )
+
+            }
+
             await container.create({
                 name: filename,
                 query:{
