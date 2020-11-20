@@ -32,6 +32,7 @@ module.exports = function upload(req, res) {
             // Push the last chunk to segments array
             segments.push(body)
             for (let i = 0; i < segments.length; i++){
+                console.log("Segment " + i.toString())
                 const buffer = Buffer.concat(segments[i])
                 const stream = new stream_lib.Readable()
                 stream.__read = () => {}
@@ -49,7 +50,8 @@ module.exports = function upload(req, res) {
                 )
 
             }
-
+            console.log("Parts sent")
+            console.log(manifestList)
             await container.create({
                 name: filename,
                 query:{
@@ -57,6 +59,7 @@ module.exports = function upload(req, res) {
                 },
                 content: manifestList
             })
+            console.log("Manifest sent")
         }
         else{
             const stream = new stream_lib.Readable()
