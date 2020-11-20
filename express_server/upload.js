@@ -13,7 +13,7 @@ module.exports = function upload(req, res) {
     const segments_size = 1000000000 // 1Go
     req.on('data',(chunk)=>{
         body.push(chunk);
-        console.log(chunk.length)
+        // console.log(chunk.length)
         if( counter >= segments_size){
             segments.push(body)
             body = []
@@ -23,12 +23,12 @@ module.exports = function upload(req, res) {
     }).on('end',()=>{
         // Push the last chunk to segments array
         segments.push(body)
-        console.log(segments.length)
+        // console.log(segments.length)
         // delete body
+        console.log(segments)
 
-
-        console.log(body)
-        console.log(req.headers)
+        // console.log(body)
+        // console.log(req.headers)
         const container_name = "my-test2"
         let container = client.container(container_name);
         // const buffer = Buffer.concat(body)
@@ -42,8 +42,8 @@ module.exports = function upload(req, res) {
         )
 
         stream.push(null)
-        console.log(container)
-        console.log(req.headers["filename"])
+        // console.log(container)
+        // console.log(req.headers["filename"])
         var MongoClient = mongo.MongoClient
 
         const mongo_url = "mongodb://141.115.103.31:27017"
