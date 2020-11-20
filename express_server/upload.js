@@ -23,7 +23,10 @@ module.exports = function upload(req, res) {
     }).on('end',()=>{
         // Push the last chunk to segments array
         segments.push(body)
-        delete body
+        console.log(segments.length)
+        // delete body
+
+
         console.log(body)
         console.log(req.headers)
         const container_name = "my-test2"
