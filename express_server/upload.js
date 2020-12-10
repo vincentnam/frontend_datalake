@@ -2,6 +2,8 @@ const IncomingForm = require('formidable').IncomingForm
 const request = require('request')
 const streamBuffers = require('stream-buffers')
 const Swiftclient = require('openstack-swift-client')
+
+
 const authenticator = new Swiftclient.SwiftAuthenticator('http://141.115.103.30:8080/auth/v1.0', 'test:tester', 'testing');
 const client = new Swiftclient(authenticator)
 const stream_lib = require("stream")
@@ -39,7 +41,8 @@ module.exports = function upload(req, res) {
                 stream.push(buffer)
 
                 stream.push(null)
-
+                // TODO : HAND MADE SLO OBJECT CREATION
+                // https://github.com/01045972746/swift-client
                 const rep = await container.create(i.toString() +"_"+filename, stream).then( rep=> {
                         console.log(rep)
                 }
